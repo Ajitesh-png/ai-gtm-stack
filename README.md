@@ -87,9 +87,24 @@ Restart Claude Code. `/advet how should I structure a $30k/mo Meta account for a
 - **Rules carry their evidence.** The X playbook cites the posts each rule came from and expires quarterly. Format-radar guardrails name the episode that taught them.
 - **Confidential stays out of the repo.** Voice, ICP, competitor intel and customer numbers live in `context/` and `knowledge/`, both gitignored. `scripts/check.py` fails CI on any local path or secret-shaped string.
 
-## What this stack produced
+## Results
 
-Operated by one person for one product over 2026: an autonomous competitor radar running daily; a 1,300-keyword SEO universe collapsed into a 29-row content plan and a citation-priority list; four waves of published blogs with generated imagery; a weekly ad-format series with built post videos; a measured X playbook that changed how every post is written; and a lead pipeline that writes CSVs with an intent signal on every row and never emails a competitor. Numbers that identify customers are deliberately absent; the methods are all here.
+The product this stack runs growth for, as of 2026:
+
+| | |
+|---|---|
+| **4,000+** | marketers running paid social through the product across Meta and TikTok |
+| **40,000+** | ads generated on the platform |
+
+Those are platform numbers; the stack is the growth machinery behind them, operated by one person. What the machinery itself produced in 2026:
+
+- An autonomous competitor radar that rates every competitor post, every day, and separates engagement from buyer relevance.
+- A 1,300-keyword SEO universe collapsed into 18 clusters, a 29-row content plan, a per-keyword impact model and a citation-priority list for AI Overviews; four waves of blogs published with generated imagery.
+- A measured X playbook, built from a full-population teardown, that changed how every post is written: target metric first, gated CTAs, dated rules that expire quarterly.
+- A weekly ad-format series that finds, deconstructs, rebuilds and renders the post video without an editor.
+- A lead pipeline that writes CSVs with an intent signal on every row and has never emailed a competitor.
+
+Per-customer performance numbers are deliberately absent. The methods are all here; the two figures above are the only ones approved for public use, per the same rule the stack enforces on itself.
 
 Not in this repo, by design: the autonomous X reply engine (it carries the founder's voice profile and the ICP config and is not yet separable), the email sequences, and anything with customer data.
 
