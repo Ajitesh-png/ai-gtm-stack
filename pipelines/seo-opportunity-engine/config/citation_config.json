@@ -1,0 +1,58 @@
+{
+  "_doc": "Citation Potential Score (CPS) config for GEO targeting. CPS 0-100 = how likely AI engines (Perplexity/ChatGPT/AI Overviews) cite a page. Tune weights + per-page flags here; run citation_score.py to rank. Being eligible != being cited — pages must also follow the GEO build checklist (see SKILL Part 5 / Authority doc).",
+
+  "weights": {
+    "serp_ai_surface": {
+      "_cap": 25,
+      "ai_overview": 15,
+      "people_also_ask": 8,
+      "featured_snippet": 5,
+      "discussions_and_forums": 2
+    },
+    "format_extractability": {
+      "_cap": 25,
+      "data_report": 25,
+      "examples_listicle": 22,
+      "definition": 20,
+      "comparison": 18,
+      "template": 16,
+      "thought_leadership": 14,
+      "how_to": 12,
+      "capability": 10
+    },
+    "intent": {
+      "_cap": 15,
+      "informational": 15,
+      "commercial": 9,
+      "navigational": 4,
+      "transactional": 4
+    },
+    "first_party_data": 15,
+    "named_expert": 10,
+    "brand_entity": 10
+  },
+
+  "tiers": { "A": 70, "B": 50 },
+
+  "pages": [
+    {"page": "We Analyzed 1,000 Agentic Video Ads", "primary_kw": null, "format": "data_report", "intent": "informational", "first_party_data": true, "named_expert": true, "brand_entity": false, "cluster": "Agentic"},
+    {"page": "Every Big-Brand AI Ad (Coca-Cola, Skechers, Super Bowl)", "primary_kw": "coca-cola ai ads", "format": "examples_listicle", "first_party_data": false, "named_expert": false, "brand_entity": true, "cluster": "AI Ad Generator"},
+    {"page": "Famous AI Commercials (2026)", "primary_kw": "ai commercial", "format": "examples_listicle", "first_party_data": false, "named_expert": false, "brand_entity": true, "cluster": "AI Commercials"},
+    {"page": "30 Real AI Advertising Examples (2026)", "primary_kw": "ai advertising examples", "format": "examples_listicle", "first_party_data": false, "named_expert": false, "brand_entity": true, "cluster": "AI Advertising"},
+    {"page": "Creative Fatigue: Why Your Meta Ads Stop Working", "primary_kw": "creative fatigue", "format": "thought_leadership", "first_party_data": true, "named_expert": true, "brand_entity": false, "cluster": "Agentic"},
+    {"page": "/ai-advertising (pillar)", "primary_kw": "ai advertising", "format": "definition", "first_party_data": false, "named_expert": false, "brand_entity": false, "cluster": "AI Advertising"},
+    {"page": "/agentic-video-ads (category pillar)", "primary_kw": "agentic video ads", "format": "definition", "first_party_data": false, "named_expert": true, "brand_entity": false, "cluster": "Agentic"},
+    {"page": "What Is an AI Ad Campaign?", "primary_kw": "ai advertising campaign", "format": "definition", "first_party_data": false, "named_expert": false, "brand_entity": false, "cluster": "AI Advertising"},
+    {"page": "AI Programmatic Advertising, Explained", "primary_kw": "ai programmatic advertising", "format": "definition", "first_party_data": false, "named_expert": false, "brand_entity": false, "cluster": "AI Advertising"},
+    {"page": "What Are UGC Ads?", "primary_kw": "what are ugc ads", "format": "definition", "first_party_data": false, "named_expert": false, "brand_entity": false, "cluster": "UGC"},
+    {"page": "AI-Generated Advertising: How Brands Use It", "primary_kw": "ai generated advertising", "format": "how_to", "first_party_data": false, "named_expert": false, "brand_entity": false, "cluster": "AI Advertising"},
+    {"page": "AI-Powered Video Ads: How They Actually Work", "primary_kw": "ai powered video ads", "format": "how_to", "first_party_data": false, "named_expert": false, "brand_entity": false, "cluster": "AI Video Ads"},
+    {"page": "Generative AI vs Agentic Advertising", "primary_kw": "generative ai advertising", "format": "comparison", "first_party_data": false, "named_expert": true, "brand_entity": false, "cluster": "AI Advertising"},
+    {"page": "Claude Code, But for Video Ads", "primary_kw": null, "format": "thought_leadership", "first_party_data": false, "named_expert": true, "brand_entity": false, "cluster": "Agentic"},
+    {"page": "Ad Creative Brief Template", "primary_kw": "ad creative brief", "format": "template", "first_party_data": true, "named_expert": false, "brand_entity": false, "cluster": "AI Ad Creative"},
+    {"page": "AI Ad Creative: How to Generate Winning Creative", "primary_kw": "ad creative ai", "format": "how_to", "first_party_data": false, "named_expert": false, "brand_entity": false, "cluster": "AI Ad Creative"},
+    {"page": "UGC-Style Ads with AI", "primary_kw": "ugc-style ads", "format": "how_to", "first_party_data": false, "named_expert": false, "brand_entity": false, "cluster": "UGC"},
+    {"page": "Best Free AI Ad Generators (2026)", "primary_kw": "ai ad generator free", "format": "comparison", "first_party_data": false, "named_expert": false, "brand_entity": false, "cluster": "AI Ad Generator"},
+    {"page": "Best AI Video Ad Makers (2026)", "primary_kw": "video ad maker", "format": "comparison", "first_party_data": false, "named_expert": false, "brand_entity": false, "cluster": "AI Video Ads"}
+  ]
+}

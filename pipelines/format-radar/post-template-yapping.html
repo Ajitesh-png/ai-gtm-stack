@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Max Format Radar — yapping 3-up template (1824×1080)</title>
+<style>
+  /* ============================================================
+     MAX FORMAT RADAR — template B: the 3-up "yapping" grid.
+
+     Canvas 1824x1080 = three TRUE 9:16 panels (608x1080) butted
+     edge to edge, exactly like the reference. All Notch identity
+     is overlay chrome, so no panel area is sacrificed to branding.
+
+     build_grid.py renders this page ONCE as a transparent chrome
+     layer and hstacks the three clips underneath it. One Chrome
+     render, one ffmpeg pass.
+
+     Episode copy lives in the <script id="episode"> block only.
+     ============================================================ */
+  :root{
+    --yellow:#F5C304;
+    --ink:#111111;
+    --muted:#8A8A8E;
+    --band:#0E0E0E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  /* Author display rules (.band is display:flex) beat the UA stylesheet's
+     [hidden]{display:none}, so the opt-in chrome needs this to actually hide. */
+  [hidden]{display:none!important}
+  html{background:transparent}
+  body{background:#2a2a2a;display:flex;align-items:center;justify-content:center;min-height:100vh}
+
+  #scaler{--preview:.5;transform:scale(var(--preview));transform-origin:center center}
+
+  .stage{
+    width:1824px;height:1080px;position:relative;overflow:hidden;background:#000;
+    font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- panels (preview only; hidden in the render) ---------- */
+  .panels{position:absolute;inset:0;display:flex}
+  .pane{position:relative;width:608px;height:1080px;overflow:hidden}
+  .panels video,.panels img{width:608px;height:1080px;object-fit:cover;display:block}
+
+  /* ---- the ad's opening line, burned into the panel ---- */
+  /* Optional per panel. Used when the episode's variable IS the first line
+     (Ep.03), so the grid shows three opening frames rather than three clips.
+     Rendered here rather than generated: image models mangle text, and this
+     copy is the entire point of the comparison. */
+  .adline{
+    position:absolute;left:0;right:0;bottom:0;
+    padding:130px 38px 44px;
+    background:linear-gradient(transparent,rgba(0,0,0,.84) 48%);
+    color:#fff;font-size:37px;font-weight:800;line-height:1.2;letter-spacing:-.022em;
+  }
+  .adline em{font-style:normal;color:var(--yellow)}
+  .adline .sub{
+    display:block;margin-top:12px;font-size:21px;font-weight:600;
+    color:rgba(255,255,255,.7);letter-spacing:0;
+  }
+
+  /* hairlines between panels, so three clips read as three ads */
+  .seam{position:absolute;top:0;bottom:0;width:2px;background:rgba(255,255,255,.9)}
+
+  /* ---------- brand pill, top-left ---------- */
+  .brandpill{
+    position:absolute;top:30px;left:32px;
+    display:flex;align-items:center;gap:12px;
+    background:#fff;border-radius:999px;padding:12px 24px 12px 14px;
+    box-shadow:0 6px 22px rgba(0,0,0,.28);
+  }
+  .brandpill svg{width:44px;height:44px;display:block}
+  .brandpill .word{font-size:38px;font-weight:700;letter-spacing:-.035em;color:var(--ink);line-height:1}
+
+  /* ---------- claim pill, top-right ---------- */
+  .claim{
+    position:absolute;top:30px;right:32px;
+    background:#fff;border-radius:999px;padding:16px 30px;
+    font-size:29px;font-weight:800;letter-spacing:-.01em;color:var(--ink);
+    box-shadow:0 6px 22px rgba(0,0,0,.28);white-space:nowrap;
+  }
+  .claim .dot{color:var(--muted);margin:0 8px}
+
+  /* ---------- per-panel hook label ---------- */
+  /* Each panel is a different OPENING MOVE. Naming them is what turns
+     "three clips" into "a hook test". */
+  .hook{
+    position:absolute;top:120px;
+    display:flex;align-items:center;gap:12px;
+    background:rgba(0,0,0,.74);border-radius:12px;padding:12px 18px;
+    backdrop-filter:blur(3px);
+  }
+  .hook .n{
+    width:26px;height:26px;border-radius:50%;background:var(--yellow);
+    font-size:16px;font-weight:800;color:#111;display:flex;align-items:center;justify-content:center;
+  }
+  .hook .t{font-size:23px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+
+  /* ---------- bottom band: the why + the call ---------- */
+  .band{
+    position:absolute;left:0;right:0;bottom:0;height:210px;
+    background:var(--band);border-top:6px solid var(--yellow);
+    display:flex;align-items:flex-start;padding:26px 44px 0;
+  }
+  .band .col{flex:1 1 0;padding-right:44px}
+  .band .col + .col{padding-left:48px;padding-right:0;border-left:1px solid rgba(255,255,255,.14)}
+  .band .lbl{
+    font-size:17px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:11px;
+  }
+  .band .txt{font-size:26px;font-weight:600;line-height:1.33;color:#fff;letter-spacing:-.012em}
+  .band .txt mark{background:rgba(245,195,4,.30);color:var(--yellow);padding:0 3px;border-radius:3px}
+  .sig{
+    position:absolute;right:44px;bottom:18px;
+    font-size:19px;font-weight:600;color:rgba(255,255,255,.42);letter-spacing:-.005em;
+  }
+  .sig b{color:rgba(255,255,255,.78);font-weight:800}
+
+  /* ---------- render mode: chrome only, transparent behind ---------- */
+  body[data-mode="chrome"],
+  body[data-mode="chrome"] .stage{background:transparent!important;background-color:transparent!important}
+  /* Chrome mode hides the panel MEDIA but keeps .pane and its .adline, so a
+     burned-in opening line composites over the video instead of vanishing
+     with it. Hiding .pane wholesale would drop the copy from video builds. */
+  body[data-mode="chrome"] .panels video,
+  body[data-mode="chrome"] .panels img{display:none!important}
+  body[data-mode="chrome"] .pane{background:transparent!important}
+</style>
+</head>
+<body>
+<div id="scaler">
+<div class="stage">
+
+  <!-- preview panels; hidden when rendering the chrome layer -->
+  <div class="panels" id="j-panels"></div>
+
+  <div class="seam" style="left:607px"></div>
+  <div class="seam" style="left:1215px"></div>
+
+  <div class="brandpill">
+    <svg viewBox="486.63 24.26 84.69 84.69" xmlns="http://www.w3.org/2000/svg">
+      <path d="M486.63,54.75c0-10.67,0-16.01,2.08-20.08,1.83-3.58,4.74-6.5,8.33-8.33,4.08-2.08,9.41-2.08,20.08-2.08h23.71c10.67,0,16.01,0,20.08,2.08,3.58,1.83,6.5,4.74,8.33,8.33,2.08,4.08,2.08,9.41,2.08,20.08v23.71c0,10.67,0,16.01-2.08,20.08-1.83,3.58-4.74,6.5-8.33,8.33-4.08,2.08-9.41,2.08-20.08,2.08h-23.71c-10.67,0-16.01,0-20.08-2.08-3.58-1.83-6.5-4.74-8.33-8.33-2.08-4.08-2.08-9.41-2.08-20.08v-23.71Z" fill="#f5c304"/>
+      <path d="M545.9,71.89l-5.59,5.59c-3.14-3.14-7.23-4.7-11.36-4.69-4.09-.01-8.21,1.57-11.33,4.7l-5.59-5.59,16.94-16.94,16.93,16.93h.01Z" fill="#212121"/>
+    </svg>
+    <div class="word">notch</div>
+  </div>
+
+  <!-- Everything below is optional chrome. With "band": false the video carries
+       nothing but the notch mark and the format labels, and the why/call moves
+       into the thread copy instead. See the note in episode-yapping.json. -->
+  <div class="claim" id="j-claim" hidden></div>
+
+  <div id="j-hooks"></div>
+
+  <div class="band" id="j-band" hidden>
+    <div class="col">
+      <div class="lbl" id="j-lbl-why"></div>
+      <div class="txt" id="j-why"></div>
+    </div>
+    <div class="col">
+      <div class="lbl" id="j-lbl-call"></div>
+      <div class="txt" id="j-call"></div>
+    </div>
+  </div>
+  <div class="sig" id="j-sig" hidden>You sleep. <b>Max ships.</b></div>
+
+</div>
+</div>
+
+<!-- ============================================================
+     EPISODE CONFIG — build_grid.py rewrites this block.
+     Keep in sync with episode-yapping.json for live preview.
+     ============================================================ -->
+<script id="episode" type="application/json">
+{
+  "panels": [
+    { "clip": "assets/yap-1.mp4", "hook": "comment reply" },
+    { "clip": "assets/yap-2.mp4", "hook": "mid-routine" },
+    { "clip": "assets/yap-3.mp4", "hook": "confessional" }
+  ]
+}
+</script>
+
+<script>
+  const PANEL_W = 608;
+  const cfg = JSON.parse(document.getElementById('episode').textContent);
+  const set = (id, v) => { const n = document.getElementById(id); if (n) n.innerHTML = v; };
+  const show = (id, on) => { const n = document.getElementById(id); if (n) n.hidden = !on; };
+
+  // Default is a clean video: notch mark + format labels only. Opt the
+  // claim pill and the why/call band back in per episode.
+  if (cfg.claim) {
+    set('j-claim', cfg.claim.join('<span class="dot">·</span>'));
+    show('j-claim', true);
+  }
+
+  // Panels accept video OR a still image — a static grid is the same layout
+  // with <img> panels, and costs ~1 credit each instead of 7.5.
+  const IMG = /\.(png|jpe?g|webp|avif)$/i;
+  document.getElementById('j-panels').innerHTML = cfg.panels
+    .map((p) => {
+      const media = IMG.test(p.clip)
+        ? '<img src="' + p.clip + '" alt="" />'
+        : '<video src="' + p.clip + '" autoplay muted loop playsinline></video>';
+      // an optional opening line burned over the panel
+      const line = p.line
+        ? '<div class="adline">' + p.line +
+          (p.sub ? '<span class="sub">' + p.sub + '</span>' : '') + '</div>'
+        : '';
+      return '<div class="pane">' + media + line + '</div>';
+    })
+    .join('');
+
+  // one hook label per panel, pinned inside its column
+  document.getElementById('j-hooks').innerHTML = cfg.panels
+    .map((p, i) =>
+      '<div class="hook" style="left:' + (i * PANEL_W + 26) + 'px">' +
+      '<div class="n">' + (i + 1) + '</div><div class="t">' + p.hook + '</div></div>')
+    .join('');
+
+  if (cfg.band) {
+    set('j-lbl-why', cfg.band.why_label);
+    set('j-why', cfg.band.why);
+    set('j-lbl-call', cfg.band.call_label);
+    set('j-call', cfg.band.call);
+    show('j-band', true);
+    show('j-sig', true);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Max Format Radar — thread cards</title>
+<style>
+  /* ============================================================
+     In-thread explainer cards. One per argument that's easier to
+     SEE than to read. Rendered by build_cards.py, one per --card.
+
+     card3 (1600x900)  — "it never lets you leave": where the exits are
+     card4 (1216x1080) — "the worse it looks, the better it sells"
+     ============================================================ */
+  :root{ --yellow:#F5C304; --ink:#111; --muted:#8A8A8E; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  [hidden]{display:none!important}
+  html{background:transparent}
+  body{background:#2a2a2a;display:flex;align-items:center;justify-content:center;min-height:100vh;
+       font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  #scaler{--preview:.55;transform:scale(var(--preview));transform-origin:center center}
+
+  .mark{position:absolute;display:flex;align-items:center;gap:10px}
+  .mark svg{width:34px;height:34px;display:block}
+  .mark .w{font-size:30px;font-weight:700;letter-spacing:-.035em;line-height:1}
+
+  /* ---------------- card 3 — the gap ---------------- */
+  .card3{width:1600px;height:900px;position:relative;overflow:hidden;background:#0B0B0B;padding:70px 80px}
+  .card3 .kicker{font-size:22px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .card3 h1{font-size:62px;font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1.06;margin:20px 0 86px}
+  .card3 h1 em{font-style:normal;color:var(--yellow)}
+
+  .track{margin-bottom:84px}
+  .track .lbl{font-size:25px;font-weight:700;color:#fff;margin-bottom:18px;letter-spacing:-.01em}
+  .track .lbl span{color:var(--muted);font-weight:600}
+  .bars{display:flex;align-items:center;height:74px}
+  .blk{height:74px;border-radius:5px}
+  /* scripted: blocks separated by gaps — every gap is a door */
+  .scripted .blk{background:#3A3A3E}
+  .gap{width:46px;position:relative;height:74px}
+  .gap::after{
+    content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:2px;height:104px;background:repeating-linear-gradient(#E5484D 0 8px,transparent 8px 15px);
+  }
+  .exit{
+    position:absolute;left:50%;transform:translateX(-50%);top:86px;
+    font-size:17px;font-weight:800;letter-spacing:.1em;color:#E5484D;white-space:nowrap;
+  }
+  /* yapping: one unbroken run */
+  .yap .blk{background:var(--yellow)}
+
+  .card3 .foot{
+    position:absolute;left:80px;right:80px;bottom:64px;
+    font-size:31px;font-weight:600;color:#fff;letter-spacing:-.015em;line-height:1.35;
+  }
+  .card3 .foot b{color:var(--yellow);font-weight:800}
+  .card3 .mark{top:66px;right:80px;color:#fff}
+
+
+  /* ---------------- card five — the five executions, at ad proportions ----------------
+     The note can only afford thumbnails. This card exists so the work is
+     actually legible: five true 9:16 panels, big enough to read a face. */
+  .card5{width:1400px;height:668px;position:relative;overflow:hidden;background:#0B0B0B;padding:0}
+  .card5 .hdr{display:flex;align-items:center;gap:16px;padding:26px 40px 20px}
+  .card5 .hdr svg{width:38px;height:38px;display:block}
+  .card5 .hdr .w{font-size:32px;font-weight:700;letter-spacing:-.035em;color:#fff;line-height:1}
+  .card5 .hdr .t{margin-left:auto;font-size:24px;font-weight:700;color:rgba(255,255,255,.62);letter-spacing:-.01em}
+  .card5 .hdr .t b{color:var(--yellow);font-weight:800}
+  .card5 .row5{display:flex;gap:14px;padding:0 40px}
+  .card5 .p{position:relative;width:250px}
+  .card5 .p img{width:250px;height:444px;object-fit:cover;display:block;border-radius:10px}
+  .card5 .p .ctx{
+    position:absolute;top:12px;left:12px;background:rgba(0,0,0,.8);color:#fff;
+    font-size:15px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:6px 10px;border-radius:6px;
+  }
+  .card5 .p .obj{
+    margin-top:12px;font-size:22px;font-weight:800;color:#fff;letter-spacing:-.015em;line-height:1.2;
+  }
+
+  /* ---------------- card 4 — presented vs owned ---------------- */
+  .card4{width:1216px;height:1080px;position:relative;overflow:hidden;background:#0B0B0B;display:flex}
+  .half{width:608px;height:1080px;position:relative;overflow:hidden}
+  .half img{width:100%;height:100%;object-fit:cover;display:block}
+  .half + .half{border-left:2px solid #fff}
+  .chip{
+    position:absolute;top:32px;left:32px;
+    background:rgba(0,0,0,.78);border-radius:10px;padding:11px 18px;
+    font-size:22px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#fff;
+  }
+  .chip.bad{color:#fff}
+  .chip.good{color:var(--yellow)}
+  /* Solid slab, not a gradient — the left panel is near-white and a gradient
+     leaves the kicker illegible on it. */
+  .verdict{
+    position:absolute;left:0;right:0;bottom:0;padding:24px 32px 28px;
+    background:rgba(0,0,0,.88);
+  }
+  .verdict .f{font-size:19px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-bottom:9px}
+  .verdict .v{font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.15;color:#fff}
+  .verdict .v.skip{color:#E5484D}
+  .verdict .v.trust{color:var(--yellow)}
+  .card4 .mark{bottom:0;left:0;right:0;justify-content:center;padding:0;top:auto;
+               display:none}
+</style>
+</head>
+<body>
+<div id="scaler">
+
+  <!-- ===================== CARD 3 ===================== -->
+  <div class="card3" id="card3">
+    <div class="kicker">why yapping holds</div>
+    <h1>people don't leave mid-sentence.<br/>they leave at <em>the gap</em>.</h1>
+
+    <div class="track scripted">
+      <div class="lbl">a scripted ad <span>— every clean edge is a door</span></div>
+      <div class="bars">
+        <div class="blk" style="width:250px"></div>
+        <div class="gap"><div class="exit">EXIT</div></div>
+        <div class="blk" style="width:196px"></div>
+        <div class="gap"><div class="exit">EXIT</div></div>
+        <div class="blk" style="width:288px"></div>
+        <div class="gap"><div class="exit">EXIT</div></div>
+        <div class="blk" style="width:214px"></div>
+        <div class="gap"><div class="exit">EXIT</div></div>
+        <div class="blk" style="width:158px"></div>
+      </div>
+    </div>
+
+    <div class="track yap">
+      <div class="lbl">yapping <span>— the sentence never finishes</span></div>
+      <div class="bars"><div class="blk" style="width:1440px"></div></div>
+    </div>
+
+    <div class="foot">no dead air. no landed full stop. <b>nowhere clean to swipe.</b></div>
+
+    <div class="mark">
+      <svg viewBox="486.63 24.26 84.69 84.69" xmlns="http://www.w3.org/2000/svg">
+        <path d="M486.63,54.75c0-10.67,0-16.01,2.08-20.08,1.83-3.58,4.74-6.5,8.33-8.33,4.08-2.08,9.41-2.08,20.08-2.08h23.71c10.67,0,16.01,0,20.08,2.08,3.58,1.83,6.5,4.74,8.33,8.33,2.08,4.08,2.08,9.41,2.08,20.08v23.71c0,10.67,0,16.01-2.08,20.08-1.83,3.58-4.74,6.5-8.33,8.33-4.08,2.08-9.41,2.08-20.08,2.08h-23.71c-10.67,0-16.01,0-20.08-2.08-3.58-1.83-6.5-4.74-8.33-8.33-2.08-4.08-2.08-9.41-2.08-20.08v-23.71Z" fill="#f5c304"/>
+        <path d="M545.9,71.89l-5.59,5.59c-3.14-3.14-7.23-4.7-11.36-4.69-4.09-.01-8.21,1.57-11.33,4.7l-5.59-5.59,16.94-16.94,16.93,16.93h.01Z" fill="#212121"/>
+      </svg>
+      <div class="w">notch</div>
+    </div>
+  </div>
+
+  <!-- ===================== CARD FIVE ===================== -->
+  <div class="card5" id="cardfive">
+    <div class="hdr"><svg viewBox="486.63 24.26 84.69 84.69" xmlns="http://www.w3.org/2000/svg"><path d="M486.63,54.75c0-10.67,0-16.01,2.08-20.08,1.83-3.58,4.74-6.5,8.33-8.33,4.08-2.08,9.41-2.08,20.08-2.08h23.71c10.67,0,16.01,0,20.08,2.08,3.58,1.83,6.5,4.74,8.33,8.33,2.08,4.08,2.08,9.41,2.08,20.08v23.71c0,10.67,0,16.01-2.08,20.08-1.83,3.58-4.74,6.5-8.33,8.33-4.08,2.08-9.41,2.08-20.08,2.08h-23.71c-10.67,0-16.01,0-20.08-2.08-3.58-1.83-6.5-4.74-8.33-8.33-2.08-4.08-2.08-9.41-2.08-20.08v-23.71Z" fill="#f5c304"/><path d="M545.9,71.89l-5.59,5.59c-3.14-3.14-7.23-4.7-11.36-4.69-4.09-.01-8.21,1.57-11.33,4.7l-5.59-5.59,16.94-16.94,16.93,16.93h.01Z" fill="#212121"/></svg><div class="w">notch</div>
+      <div class="t">one move · <b>five executions</b> · nothing shared on the surface</div>
+    </div>
+    <div class="row5">
+      <div class="p"><img src="assets/scene-1.png" style="object-position:center 12%" alt="" /><span class="ctx">changing room</span><div class="obj">“never sits right”</div></div>
+      <div class="p"><img src="assets/scene-2.png" style="object-position:center 20%" alt="" /><span class="ctx">car park</span><div class="obj">“can’t judge size”</div></div>
+      <div class="p"><img src="assets/scene-3.png" style="object-position:center 52%" alt="" /><span class="ctx">office, midday</span><div class="obj">“cheap in person”</div></div>
+      <div class="p"><img src="assets/scene-4.png" style="object-position:center 14%" alt="" /><span class="ctx">hotel room</span><div class="obj">“loses its shape”</div></div>
+      <div class="p"><img src="assets/scene-5.png" style="object-position:center 18%" alt="" /><span class="ctx">floor, laundry</span><div class="obj">“burned before”</div></div>
+      </div>
+  </div>
+
+  <!-- ===================== CARD 4 ===================== -->
+  <div class="card4" id="card4">
+    <div class="half">
+      <img src="assets/p4-presented.png" alt="" />
+      <div class="chip bad">presented</div>
+      <div class="verdict">
+        <div class="f">your brain files it as</div>
+        <div class="v skip">something they're selling</div>
+      </div>
+    </div>
+    <div class="half">
+      <img src="assets/p4-owned.png" alt="" />
+      <div class="chip good">incidental</div>
+      <div class="verdict">
+        <div class="f">your brain files it as</div>
+        <div class="v trust">something they own</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

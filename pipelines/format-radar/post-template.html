@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Max Format Radar — post template (1080×1920)</title>
+<style>
+  /* ============================================================
+     MAX FORMAT RADAR — recurring Twitter/X post visual
+     Canvas: 1080 x 1920 (true size; #scaler only shrinks the preview).
+
+     DO NOT hand-edit the copy in this file. Everything episode-specific
+     lives in the <script id="episode"> JSON block at the bottom, and
+     build.py rewrites that block per scene. Edit episode.json instead.
+     ============================================================ */
+  :root{
+    --yellow:#F5C304;
+    --ink:#111111;
+    --paper:#FAFAFA;
+    --card:#FFFFFF;
+    --muted:#8A8A8E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  /* Keep the preview backdrop on <body> only. If it also sat on <html> it would
+     paint the canvas and the transparent scene overlays would render opaque. */
+  html{background:transparent}
+  body{background:#2a2a2a;display:flex;align-items:center;justify-content:center;min-height:100vh}
+
+  /* Preview scaler. build.py forces --preview:1 before rendering. */
+  #scaler{--preview:.42;transform:scale(var(--preview));transform-origin:center center}
+
+  .stage{
+    width:1080px;height:1920px;position:relative;overflow:hidden;
+    background:var(--paper);
+    font-family:"Inter","Helvetica Neue",Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- 1. Brand lockup ---------- */
+  .brand{position:absolute;top:112px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:20px}
+  .brand svg{width:78px;height:78px;display:block}
+  .brand .word{font-size:76px;font-weight:700;letter-spacing:-.035em;color:var(--ink);line-height:1;transform:translateY(2px)}
+
+  /* ---------- 2. Claim pill ---------- */
+  .pill{
+    position:absolute;top:252px;left:50%;transform:translateX(-50%);
+    background:var(--card);border-radius:999px;padding:22px 46px;
+    font-size:34px;font-weight:700;letter-spacing:-.01em;color:var(--ink);
+    box-shadow:0 8px 28px rgba(0,0,0,.10);white-space:nowrap;
+  }
+  .pill .arrow{color:var(--muted);font-weight:600;margin:0 10px}
+
+  /* ---------- 3. Left input column ----------
+     Four inputs, because the narrative has two research beats: where the
+     FORMAT came from (competitors) and where the PAIN came from (the account's
+     own ad history). Collapsing those into one chip loses the whole story. */
+  .inputs{position:absolute;left:74px;top:441px;width:250px;display:flex;flex-direction:column;align-items:center}
+  .unit{display:flex;flex-direction:column;align-items:center;gap:16px}
+  .chip{
+    width:168px;height:168px;border-radius:38px;overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.14);
+    display:flex;align-items:center;justify-content:center;background:var(--card);position:relative;
+  }
+  .chip img{width:100%;height:100%;object-fit:cover;display:block}
+  .chip--format{background:#151515;flex-direction:column;gap:10px;padding:0 12px}
+  .chip--format .glyph{width:46px;height:46px}
+  .chip--format .lbl{font-size:19px;font-weight:800;letter-spacing:.08em;color:#fff;text-transform:uppercase;line-height:1.22;text-align:center}
+  .chip--format .lbl em{color:var(--yellow);font-style:normal;display:block}
+  .chip--notch{background:#0B0B0B}
+  .chip--notch svg{width:94px;height:94px}
+  .plus{font-size:56px;font-weight:400;color:var(--ink);line-height:1;margin:16px 0;user-select:none}
+  .cap{width:250px;text-align:center;font-size:18px;font-weight:600;color:var(--muted);letter-spacing:-.01em;line-height:1.3}
+
+  /* ---------- 4. Dashed arrows ---------- */
+  .arrows{position:absolute;inset:0;pointer-events:none}
+
+  /* ---------- 5. Output frame (the generated ad) ---------- */
+  .output{
+    position:absolute;left:392px;top:452px;width:614px;height:1092px;   /* 9:16 exactly */
+    border-radius:6px;overflow:hidden;background:#111;
+    box-shadow:26px 26px 50px rgba(0,0,0,.22);
+  }
+  .output video,.output img{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* the poll question — persists across every scene */
+  .qtag{
+    position:absolute;top:44px;left:40px;right:40px;
+    background:rgba(0,0,0,.78);border-radius:14px;padding:20px 24px;
+    color:#fff;font-size:27px;font-weight:700;line-height:1.25;letter-spacing:-.01em;
+  }
+  /* burned-in street-poll subtitle — changes per scene */
+  .subs{position:absolute;left:0;right:0;bottom:96px;display:flex;justify-content:center;padding:0 40px}
+  .subs span{
+    background:#000;color:var(--yellow);
+    font-size:34px;font-weight:800;line-height:1.28;letter-spacing:-.01em;text-align:center;padding:10px 18px;
+    box-decoration-break:clone;-webkit-box-decoration-break:clone;
+  }
+
+  /* ---------- 6. The Notch flip: the reasoning strip ---------- */
+  /* Arcads stops at "100% automated". We show the call that was made.
+     This card is the only defensible part of the format — never cut it. */
+  .reason{
+    position:absolute;left:392px;top:1566px;width:614px;
+    background:var(--card);border-radius:20px;border-left:8px solid var(--yellow);
+    padding:22px 26px;box-shadow:0 10px 30px rgba(0,0,0,.10);
+  }
+  .reason .who{font-size:17px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  /* The trace: the provenance chain, one row per beat. This is the narrative —
+     found it → picked the pain from the account → wrote the script around it. */
+  .reason .step{display:flex;gap:13px;align-items:flex-start;margin-bottom:10px}
+  .reason .step:last-child{margin-bottom:0}
+  .reason .n{
+    flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:var(--yellow);
+    font-size:16px;font-weight:800;color:#111;display:flex;align-items:center;justify-content:center;
+    transform:translateY(2px);
+  }
+  .reason .txt{font-size:21px;font-weight:600;line-height:1.30;color:var(--ink);letter-spacing:-.012em}
+  .reason .txt mark{background:rgba(245,195,4,.34);color:var(--ink);padding:0 3px;border-radius:3px}
+
+  /* ---------- 7. Footer ---------- */
+  .foot{position:absolute;left:0;right:0;bottom:34px;text-align:center;font-size:25px;font-weight:600;color:var(--muted);letter-spacing:-.005em}
+  .foot b{color:var(--ink);font-weight:800}
+
+  /* ---------- build.py render modes ----------
+     plate  = background plate: no video pixels, no burned text
+     scene  = transparent overlay: question card + this scene's subtitle only */
+  body[data-mode="plate"] .output video,
+  body[data-mode="plate"] .qtag,
+  body[data-mode="plate"] .subs{display:none}
+
+  body[data-mode="scene"],
+  body[data-mode="scene"] .stage{background:transparent!important;background-color:transparent!important}
+  body[data-mode="scene"] .brand,
+  body[data-mode="scene"] .pill,
+  body[data-mode="scene"] .inputs,
+  body[data-mode="scene"] .arrows,
+  body[data-mode="scene"] .reason,
+  body[data-mode="scene"] .foot{display:none!important}
+  body[data-mode="scene"] .output{background:transparent!important;box-shadow:none!important}
+  body[data-mode="scene"] .output video{display:none!important}
+</style>
+</head>
+<body>
+<div id="scaler">
+<div class="stage">
+
+  <div class="brand">
+    <svg viewBox="486.63 24.26 84.69 84.69" xmlns="http://www.w3.org/2000/svg">
+      <path d="M486.63,54.75c0-10.67,0-16.01,2.08-20.08,1.83-3.58,4.74-6.5,8.33-8.33,4.08-2.08,9.41-2.08,20.08-2.08h23.71c10.67,0,16.01,0,20.08,2.08,3.58,1.83,6.5,4.74,8.33,8.33,2.08,4.08,2.08,9.41,2.08,20.08v23.71c0,10.67,0,16.01-2.08,20.08-1.83,3.58-4.74,6.5-8.33,8.33-4.08,2.08-9.41,2.08-20.08,2.08h-23.71c-10.67,0-16.01,0-20.08-2.08-3.58-1.83-6.5-4.74-8.33-8.33-2.08-4.08-2.08-9.41-2.08-20.08v-23.71Z" fill="#f5c304"/>
+      <path d="M545.9,71.89l-5.59,5.59c-3.14-3.14-7.23-4.7-11.36-4.69-4.09-.01-8.21,1.57-11.33,4.7l-5.59-5.59,16.94-16.94,16.93,16.93h.01Z" fill="#212121"/>
+    </svg>
+    <div class="word">notch</div>
+  </div>
+
+  <div class="pill">found <span class="arrow">→</span> built <span class="arrow">→</span> live</div>
+
+  <!-- chips are built from the episode config -->
+  <div class="inputs" id="j-inputs"></div>
+
+  <svg class="arrows" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#111"/>
+      </marker>
+    </defs>
+    <path d="M282 548 C 320 566, 342 592, 368 622" fill="none" stroke="#111" stroke-width="4.5" stroke-dasharray="16 13" stroke-linecap="round" marker-end="url(#ah)"/>
+    <path d="M282 1412 C 320 1394, 342 1368, 368 1338" fill="none" stroke="#111" stroke-width="4.5" stroke-dasharray="16 13" stroke-linecap="round" marker-end="url(#ah)"/>
+  </svg>
+
+  <div class="output">
+    <video id="j-video" autoplay muted loop playsinline></video>
+    <div class="qtag" id="j-question"></div>
+    <div class="subs"><span id="j-subtitle"></span></div>
+  </div>
+
+  <div class="reason">
+    <div class="who" id="j-reason-title">how it got here</div>
+    <div id="j-trace"></div>
+  </div>
+
+  <div class="foot">You sleep. <b>Max ships.</b></div>
+
+</div>
+</div>
+
+<!-- ============================================================
+     EPISODE CONFIG — build.py rewrites this whole block per scene.
+     For a live preview, keep it in sync with episode.json.
+     ============================================================ -->
+<script id="episode" type="application/json">
+{
+  "chips": [
+    { "kind": "format", "glyph": "mic",   "label": ["street", "poll"],   "caption": "the format it found<br/>in competitors’ ads" },
+    { "kind": "format", "glyph": "chart", "label": ["fit", "anxiety"],   "caption": "the pain it pulled<br/>from your ad history" },
+    { "kind": "image",  "image": "assets/northfall-tee.png",             "caption": "your product" },
+    { "kind": "notch",                                                    "caption": "your growth marketer" }
+  ],
+  "question": "“What’s the one thing that stops you buying a T-shirt online?”",
+  "reason_title": "how it got here",
+  "trace": [
+    "Read 40 competitors’ live ads. Found the format — and <mark>nobody running it in apparel</mark>.",
+    "Checked your last 90 days: <mark>fit beat price</mark> on every angle you’ve ever tested.",
+    "Wrote the script around that pain. Not around the product."
+  ],
+  "preview_clip": "assets/street-poll-10s.mp4",
+  "preview_subtitle": "I CAN NEVER TELL IF IT’S GOING TO FIT"
+}
+</script>
+
+<script>
+  // Inline glyph set for the "format found" chip. Add new keys as new
+  // formats enter the radar — keep them monoline, yellow, 24x24 viewBox.
+  const GLYPHS = {
+    mic:     '<rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21"/><path d="M8.5 21h7"/>',
+    chat:    '<path d="M3.5 5.5h17v11h-9l-5 4v-4h-3z"/>',
+    compare: '<path d="M12 3v18"/><rect x="3" y="6.5" width="6" height="11" rx="1.5"/><rect x="15" y="6.5" width="6" height="11" rx="1.5"/>',
+    chart:   '<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M3 20h18"/>',
+    phone:   '<rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/>'
+  };
+
+  const NOTCH_MARK =
+    '<svg viewBox="486.63 24.26 84.69 84.69" xmlns="http://www.w3.org/2000/svg">' +
+    '<path d="M486.63,54.75c0-10.67,0-16.01,2.08-20.08,1.83-3.58,4.74-6.5,8.33-8.33,4.08-2.08,9.41-2.08,20.08-2.08h23.71c10.67,0,16.01,0,20.08,2.08,3.58,1.83,6.5,4.74,8.33,8.33,2.08,4.08,2.08,9.41,2.08,20.08v23.71c0,10.67,0,16.01-2.08,20.08-1.83,3.58-4.74,6.5-8.33,8.33-4.08,2.08-9.41,2.08-20.08,2.08h-23.71c-10.67,0-16.01,0-20.08-2.08-3.58-1.83-6.5-4.74-8.33-8.33-2.08-4.08-2.08-9.41-2.08-20.08v-23.71Z" fill="#f5c304"/>' +
+    '<path d="M545.9,71.89l-5.59,5.59c-3.14-3.14-7.23-4.7-11.36-4.69-4.09-.01-8.21,1.57-11.33,4.7l-5.59-5.59,16.94-16.94,16.93,16.93h.01Z" fill="#212121"/></svg>';
+
+  const cfg = JSON.parse(document.getElementById('episode').textContent);
+  const set = (id, v) => { const n = document.getElementById(id); if (n) n.textContent = v; };
+
+  // --- input chips: one <div class="unit"> each, joined by "+" ---
+  const chipHTML = (c) => {
+    if (c.kind === 'image') return '<div class="chip"><img src="' + c.image + '" alt="Product" /></div>';
+    if (c.kind === 'notch') return '<div class="chip chip--notch">' + NOTCH_MARK + '</div>';
+    return '<div class="chip chip--format">' +
+      '<svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="#F5C304" stroke-width="1.9" ' +
+      'stroke-linecap="round" stroke-linejoin="round">' + (GLYPHS[c.glyph] || GLYPHS.mic) + '</svg>' +
+      '<div class="lbl"><span>' + c.label[0] + '</span><em>' + (c.label[1] || '') + '</em></div></div>';
+  };
+
+  document.getElementById('j-inputs').innerHTML = cfg.chips
+    .map((c) => '<div class="unit">' + chipHTML(c) + '<div class="cap">' + c.caption + '</div></div>')
+    .join('<div class="plus">+</div>');
+
+  // --- the reasoning trace ---
+  document.getElementById('j-trace').innerHTML = cfg.trace
+    .map((t, i) => '<div class="step"><div class="n">' + (i + 1) + '</div><div class="txt">' + t + '</div></div>')
+    .join('');
+
+  set('j-reason-title', cfg.reason_title || 'how it got here');
+  set('j-question', cfg.question);
+  set('j-subtitle', cfg.preview_subtitle);
+  document.getElementById('j-video').src = cfg.preview_clip;
+</script>
+</body>
+</html>

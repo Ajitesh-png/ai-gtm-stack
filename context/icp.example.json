@@ -1,0 +1,38 @@
+{
+  "_about": "Copy to context/icp.json and describe your buyer segments. Exposed as radar://icp and via icp_context. Keys per segment are free-form; the ones below are what the daily_brief prompt expects.",
+  "product": "AI creative agent for performance marketers",
+  "segments": {
+    "dtc_ecom": {
+      "label": "DTC / e-commerce founders and in-house media buyers",
+      "one_sentence_test": "Runs a store spending $5k-$50k/month on Meta or TikTok, where a winning ad dies every 7-14 days and creative production is the bottleneck.",
+      "target_titles": ["Founder", "Owner", "Media Buyer", "Head of Growth"],
+      "bio_keywords": ["DTC", "Shopify", "ecom", "Meta ads", "7-figure"],
+      "sourcing_signals": ["posts about ad fatigue or creative costs", "10+ active ad variants in the ad library"],
+      "disqualifiers": ["agency or service provider", "no active ad spend"]
+    },
+    "affiliate_cpa": {
+      "label": "Affiliate / CPA media buyers",
+      "one_sentence_test": "Solo or small team running multiple offers where creative speed decides how much of the offer window they capture.",
+      "target_titles": ["Media Buyer", "Affiliate Marketer", "Founder"],
+      "bio_keywords": ["affiliate", "CPA", "media buyer", "ROAS", "offers"],
+      "sourcing_signals": ["bio mentions affiliate/CPA", "active in affiliate communities"],
+      "disqualifiers": ["primarily SEO or email"]
+    },
+    "mobile_gaming_ua": {
+      "label": "Mobile gaming UA teams",
+      "one_sentence_test": "Studio with a live title needing 30-50 creative variants per week per title.",
+      "target_titles": ["UA Manager", "Creative Strategist", "Head of UA"],
+      "bio_keywords": ["UA", "user acquisition", "mobile games", "CPI"],
+      "sourcing_signals": ["new title launch", "UA hiring"],
+      "disqualifiers": ["publishing-only, no UA function"]
+    },
+    "b2c_saas_growth": {
+      "label": "B2C SaaS / consumer-app growth leads",
+      "one_sentence_test": "Series A/B consumer software team running paid social with a growth leader who owns creative production.",
+      "target_titles": ["Head of Growth", "VP Marketing", "Performance Marketing Manager"],
+      "bio_keywords": ["growth", "paid social", "performance marketing"],
+      "sourcing_signals": ["recent funding", "creative strategist job posting"],
+      "disqualifiers": ["enterprise B2B", "in-house video team of 5+"]
+    }
+  }
+}

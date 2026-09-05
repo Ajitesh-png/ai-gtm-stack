@@ -1,0 +1,62 @@
+{
+  "slug": "ep05-the-audit",
+  "_narrative": "The provenance of one ad. Max found the format by reading competitors' live merino ads (the audit open: the ad's subject is what you already own, not what's for sale). Picked the pain by reading REDFERN's own ad history — 'won't need replacing' beats 'hand-stitched' on every angle they've tested. Then built a 15s ad in which the product never appears. Four chips + numbered trace = that story; keep in sync with the thread.",
+  "_no_dialogue": "This ad has no speech — it is a silent demonstration. The subtitle slot therefore carries the MECHANISM each beat is executing, not a transcript. The usual 'subtitles must match audible speech' guardrail exists to prevent caption/audio mismatch; with no audio there is nothing to mismatch, and labelling the mechanism is what makes the refined pipeline's work visible. Do not copy this pattern to a scene that does have dialogue.",
+  "chips": [
+    {
+      "kind": "format",
+      "glyph": "mic",
+      "label": [
+        "the",
+        "audit"
+      ],
+      "caption": "the format it found<br/>in competitors’ ads"
+    },
+    {
+      "kind": "format",
+      "glyph": "chart",
+      "label": [
+        "replace",
+        "again"
+      ],
+      "caption": "the pain it pulled<br/>from your ad history"
+    },
+    {
+      "kind": "image",
+      "image": "assets/redfern-wallet.png",
+      "caption": "your product"
+    },
+    {
+      "kind": "notch",
+      "caption": "your growth marketer"
+    }
+  ],
+  "question": "“Go and look at the stamp inside the one you’re carrying.”",
+  "reason_title": "how it got here",
+  "trace": [
+    "Read the live field. Found the format — an ad about <mark>what you already own</mark> — and nobody running it in leather.",
+    "Checked your last 90 days: <mark>“won’t need replacing” beat “hand-stitched”</mark> on every angle you’ve tested.",
+    "Built it around the wallet in their pocket. <mark>Ours never appears.</mark>"
+  ],
+  "_scenes_note": "Three beats, one mechanism each, verified at step 5.5 before this config was written. Beat 3 is a flux_2 still pushed with ffmpeg zoompan — kling3_0 debossed 'GENUINE LEATTER' on the first pass and failed the gate. in/out are the full 5s of each beat; no speech to trim to.",
+  "scenes": [
+    {
+      "clip": "assets/redfern-b1.mp4",
+      "in": 0.15,
+      "out": 4.9,
+      "subtitle": "NOT OUR PRODUCT. THE ONE IN YOUR POCKET."
+    },
+    {
+      "clip": "assets/redfern-b2.mp4",
+      "in": 0.1,
+      "out": 4.9,
+      "subtitle": "THE SPLIT YOU ASSUMED WAS NORMAL WEAR"
+    },
+    {
+      "clip": "assets/redfern-b3-push.mp4",
+      "in": 0.0,
+      "out": 4.95,
+      "subtitle": "THE WORD THAT MEANS THE CHEAPEST GRADE"
+    }
+  ]
+}
