@@ -21,6 +21,7 @@ docs/       architecture, case studies
 | artifact | does |
 |---|---|
 | [competitor-radar MCP](https://github.com/Ajitesh-png/competitor-radar-mcp) | scrapes competitor X accounts, rates every post per day by replies → bookmarks → retweets → likes, scores ICP relevance |
+| [Scrapling MCP + skill](mcp/README.md) (third-party) | the scraping layer for everything that is not X: stealth fetches through Cloudflare, JavaScript rendering, CSS-narrowed markdown. The scouts, the analyst and the lead finder fall back to it when a plain fetch fails |
 | `agents/format-scout` | reverse-engineers the *format* mechanics of winning posts in the category, scores them for our ICP, maps each to an ownable angle |
 | `agents/content-scout` | finds fresh high-engagement posts, deconstructs hook + structure + trigger, adapts the mechanism (never the copy) to our product |
 | `agents/content-engagement-analyst` | strict freshness + engagement-rate filters across X, LinkedIn, Reddit; six-dimension deconstruction; QA gate before anything is stored |
@@ -73,6 +74,12 @@ context/post-structure.md        the loop law
 context/post-format.md           the house format
 context/seo-hubs.md              the four topical hubs
 ```
+
+Two third-party pieces the intelligence layer expects, both optional: the
+[competitor-radar MCP](https://github.com/Ajitesh-png/competitor-radar-mcp) and
+[Scrapling](mcp/README.md) (its MCP server plus the author's `scrapling-official`
+skill: `npx skills add D4Vinci/Scrapling --skill scrapling-official`). Without
+them the scouts still run on WebFetch; they just fail more often on protected sites.
 
 Restart Claude Code. `/advet how should I structure a $30k/mo Meta account for a skincare DTC brand` is a good first run; `/content-routine` is a good second.
 

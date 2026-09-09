@@ -16,6 +16,7 @@ flowchart LR
 
   subgraph intel[intelligence]
     R[(competitor-radar MCP)]
+    S[(scrapling MCP · 3rd party)]
     FS[format-scout]
     CS[content-scout]
     CEA[content-engagement-analyst]
@@ -48,6 +49,9 @@ flowchart LR
   context --> content
   context --> demand
   context --> craft
+  S -.fallback fetch.-> FS
+  S -.fallback fetch.-> CS
+  S -.fallback fetch.-> LF
   R --> FS --> CR
   CS --> CR
   CEA --> CR
